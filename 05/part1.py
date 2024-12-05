@@ -1,18 +1,25 @@
+from pprint import pprint
 from typing import List
 
 
-puzzle_input = open('./05/example', encoding='utf-8').read().splitlines()
+puzzle_input = open('./05/input', encoding='utf-8').read().splitlines()
 
 class Rule:
     def __init__(self, rule_string):
         nums = rule_string.split('|')
-        self.x = int(nums[0])
-        self.before = int(nums[1])
+        self.first = int(nums[0])
+        self.second = int(nums[1])
 
     def rule_applies(self, update: List[int]):
-        return self.x in update and self.before in update
+        return self.first in update and self.second in update
 
-rules = []
+    def __repr__(self):
+        return f'{self.first}|{self.second}'
+
+
+# READ IN THE RULES AND UPDATES FROM INPUT
+
+rules: List[Rule] = []
 updates = []
 
 reading_rules = True
@@ -24,4 +31,24 @@ for line in puzzle_input:
     if reading_rules:
         rules.append(Rule(line))
     else:
-        updates.append([int(x) for x in ])
+        updates.append([int(x) for x in line.split(',')])
+
+# CHECK VALID UPDATES
+result = 0
+for u in updates:
+    invalid = False
+    for page in range(len(u)):
+        for rule in rules:
+            # if the rule applies and the 
+            if rule.rule_applies(u[page:]) and rule.second == u[page]:
+                invalid = True
+                break
+        if invalid:
+            break
+    if not invalid:
+        #print('valid', u)
+        #print('adding: ', u[int(len(u)/2)])
+        result += u[int(len(u)/2)]
+
+print('Part1')
+print(result)
