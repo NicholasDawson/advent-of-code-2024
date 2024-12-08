@@ -53,5 +53,34 @@ for u in updates:
     else:
         invalid_updates.append(u)
 
-# now process invalid updates
 
+def reorder_invalid(update):
+    #print('Before: ', update)
+    for x in range(len(update)-1):
+        one, two = update[x], update[x+1]
+        for rule in rules:
+            # swap if rule applies and out of order
+            if rule.rule_applies([one, two]) and rule.second == one:
+                update[x+1] = one
+                update[x] = two
+    
+    #print('After: ', update)
+    return update[int(len(update)/2)]
+
+
+result = 0
+# now process invalid updates
+for update in invalid_updates:
+    before = hash(tuple(update))
+    while True:
+        after = reorder_invalid(update)
+        new_hash = hash(tuple(update))
+        #print(new_hash, before)
+        if new_hash == before:
+            result += after
+            break
+        else:
+            before = new_hash
+
+print('Part 2')
+print(result)
